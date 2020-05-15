@@ -867,21 +867,21 @@ module.exports = ( function () {
 
 		var positionAttribute = new THREE.Float32BufferAttribute( buffers.vertex, 3 );
 
-		preTransform.applyToBufferAttribute( positionAttribute );
+		( positionAttribute.applyMatrix4(preTransform) );
 
-		geo.addAttribute( 'position', positionAttribute );
+		geo.setAttribute( 'position', positionAttribute );
 
 		if ( buffers.colors.length > 0 ) {
 
-			geo.addAttribute( 'color', new THREE.Float32BufferAttribute( buffers.colors, 3 ) );
+			geo.setAttribute( 'color', new THREE.Float32BufferAttribute( buffers.colors, 3 ) );
 
 		}
 
 		if ( skeleton ) {
 
-			geo.addAttribute( 'skinIndex', new THREE.Uint16BufferAttribute( buffers.weightsIndices, 4 ) );
+			geo.setAttribute( 'skinIndex', new THREE.Uint16BufferAttribute( buffers.weightsIndices, 4 ) );
 
-			geo.addAttribute( 'skinWeight', new THREE.Float32BufferAttribute( buffers.vertexWeights, 4 ) );
+			geo.setAttribute( 'skinWeight', new THREE.Float32BufferAttribute( buffers.vertexWeights, 4 ) );
 
 			// used later to bind the skeleton to the model
 			geo.FBX_Deformer = skeleton;
@@ -893,9 +893,9 @@ module.exports = ( function () {
 			var normalAttribute = new THREE.Float32BufferAttribute( buffers.normal, 3 );
 
 			var normalMatrix = new THREE.Matrix3().getNormalMatrix( preTransform );
-			normalMatrix.applyToBufferAttribute( normalAttribute );
+			normalAttribute.applyMatrix3(normalMatrix);
 
-			geo.addAttribute( 'normal', normalAttribute );
+			geo.setAttribute( 'normal', normalAttribute );
 
 		}
 
@@ -911,7 +911,7 @@ module.exports = ( function () {
 
 			}
 
-			geo.addAttribute( name, new THREE.Float32BufferAttribute( buffers.uvs[ i ], 2 ) );
+			geo.setAttribute( name, new THREE.Float32BufferAttribute( buffers.uvs[ i ], 2 ) );
 
 		} );
 
@@ -1106,7 +1106,7 @@ module.exports = ( function () {
 
 					if ( ! displayedWeightsWarning ) {
 
-						console.warn( 'THREE.FBXLoader: Vertex has more than 4 skinning weights assigned to vertex. Deleting additional weights.' );
+						//console.warn( 'THREE.FBXLoader: Vertex has more than 4 skinning weights assigned to vertex. Deleting additional weights.' );
 						displayedWeightsWarning = true;
 
 					}
@@ -1391,7 +1391,7 @@ module.exports = ( function () {
 		var positionAttribute = new THREE.Float32BufferAttribute( morphBuffers.vertex, 3 );
 		positionAttribute.name = morphGeoNode.attrName;
 
-		preTransform.applyToBufferAttribute( positionAttribute );
+		( positionAttribute.applyMatrix4(preTransform) );
 
 		parentGeo.morphAttributes.position.push( positionAttribute );
 
@@ -1611,7 +1611,7 @@ module.exports = ( function () {
 		} );
 
 		var geometry = new THREE.BufferGeometry();
-		geometry.addAttribute( 'position', new THREE.BufferAttribute( positions, 3 ) );
+		geometry.setAttribute( 'position', new THREE.BufferAttribute( positions, 3 ) );
 
 		return geometry;
 
@@ -2137,7 +2137,7 @@ module.exports = ( function () {
 				// model.rotation.order = enums[ value ];
 
 				// Note: Euler order other than XYZ is currently not supported, so just display a warning for now
-				console.warn( 'THREE.FBXLoader: unsupported Euler Order: %s. Currently only XYZ order is supported. Animations and rotations may be incorrect.', enums[ value ] );
+				//console.warn( 'THREE.FBXLoader: unsupported Euler Order: %s. Currently only XYZ order is supported. Animations and rotations may be incorrect.', enums[ value ] );
 
 			} else if ( value === 6 ) {
 
@@ -2240,7 +2240,7 @@ module.exports = ( function () {
 
 						} );
 
-					} else {
+					} else if ( poseNodes ) {
 
 						bindMatrices[ poseNodes.Node ] = new THREE.Matrix4().fromArray( poseNodes.Matrix.a );
 
@@ -3078,7 +3078,7 @@ module.exports = ( function () {
 
 			var version = reader.getUint32();
 
-			console.log( 'THREE.FBXLoader: FBX binary version: ' + version );
+			//console.log( 'THREE.FBXLoader: FBX binary version: ' + version );
 
 			var allNodes = new FBXTree();
 
